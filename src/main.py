@@ -46,3 +46,40 @@ async def get_author(author_name: AuthorName):
         "author_name": author_name,
         "message": "I'm just another author who got famous somehow",
     }
+
+
+# Query parameters can be defined by passing any parameters to the route handler that isn't part of the path parameters
+books_by_author = {
+    AuthorName.abercrombie: [
+        "The Blade Itself",
+        "Before They Are Hanged",
+        "Last Argument of Kings",
+    ],
+    AuthorName.rowling: [
+        "The Sorcerer's Stone",
+        "The Chamber of Secrets",
+        "The Prizoner of Azkaban",
+        "The Goblet of Fire",
+        "The Order of the Phoenix",
+        "The Half-Blood Prince",
+        "The Deathly Hallows",
+    ],
+    AuthorName.backman: [
+        "A Man Called Ove",
+        "Anxious People",
+        "Beartown",
+        "Us Against You",
+        "The Winners",
+    ],
+}
+print(books_by_author)
+
+
+@app.get("/authors/{author_name}/books")
+async def get_books_of_author(author_name: AuthorName, skip: int = 0, limit: int = 10):
+    return {
+        "author_name": author_name,
+        "books": books_by_author[author_name][skip : skip + limit],
+        "skip": skip,
+        "limit": limit,
+    }
