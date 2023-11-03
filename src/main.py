@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 from enum import Enum
 
 app = FastAPI()
@@ -83,3 +84,17 @@ async def get_books_of_author(author_name: AuthorName, skip: int = 0, limit: int
         "skip": skip,
         "limit": limit,
     }
+
+
+# APIs with a request body require an extension of Pydantic's BaseModel class
+# Models defined as this extension are identified as request body parameters and are thus differentiated from path and query parameters
+class BookDetails(BaseModel):
+    title: str
+    author: AuthorName
+    isbn: int | None = None
+    publication_year: int | None = None
+
+
+@app.post("/books/")
+async def add_book(book: BookDetails):
+    return book
